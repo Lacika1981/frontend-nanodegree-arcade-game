@@ -1,23 +1,28 @@
 // Enemies our player must avoid
-var Enemy = function() {
+var Enemy = function (speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+    this.x = -1; //the enemy will start off screen
+    this.y = this.startPosition();
+    console.log(this.y);
+    this.speed = speed;
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
+Enemy.prototype.update = function (dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    this.x = this.x + (this.x * dt);
 };
 
 // Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
+Enemy.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
@@ -30,11 +35,11 @@ Enemy.prototype.render = function() {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-
+var allEnemies = [];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+document.addEventListener('keyup', function (e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',
@@ -44,3 +49,15 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+
+// function to generate the y position for the bug to start
+
+Enemy.prototype.startPosition = function () {
+    var bugPos = [3, 4, 5];
+    var randomPos = bugPos[Math.floor(Math.random() * bugPos.length)];
+    return randomPos;
+};
+
+var enemyOne = new Enemy(5);
+allEnemies.push(enemyOne);
