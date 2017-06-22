@@ -1,13 +1,13 @@
 // Enemies our player must avoid
-var Enemy = function (speed) {
+var Enemy = function (speed, x) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = -110; //the enemy will start off screen
-    this.y = this.startPosition();
+    this.x = x; //the enemy will start off screen
+    this.y = this.startPos();
     console.log(this.y);
     this.speed = speed;
 };
@@ -67,6 +67,7 @@ Player.prototype.handleInput = function(keyEvent) {
 // Place the player object in a variable called player
 
 var allEnemies = [];
+console.log(allEnemies);
 var player = {};
 
 // This listens for key presses and sends the keys to your
@@ -85,11 +86,15 @@ document.addEventListener('keyup', function (e) {
 
 // function to generate the y position for the bug to start
 
-Enemy.prototype.startPosition = function () {
-    var bugPos = [81, 162, 243];
+Enemy.prototype.startPos = function () {
+    var bugPos = [60, 143, 225];
     var randomPos = bugPos[Math.floor(Math.random() * bugPos.length)];
     return randomPos;
 };
 
-var enemyOne = new Enemy(5);
+var enemyOne = new Enemy(5, -200);
 allEnemies.push(enemyOne);
+var enemyTwo = new Enemy(5, -260);
+allEnemies.push(enemyTwo);
+var enemyThree = new Enemy(5, -125);
+allEnemies.push(enemyThree);
