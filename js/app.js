@@ -1,13 +1,13 @@
 // Enemies our player must avoid
-var Enemy = function (speed, x) {
+var Enemy = function (speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = x; //the enemy will start off screen
-    this.y = this.startPos();
+    this.x = this.startPosX(); //the enemy will start off screen
+    this.y = this.startPosY();
     console.log(this.y);
     this.speed = speed;
 };
@@ -18,7 +18,12 @@ Enemy.prototype.update = function (dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    var resetBug = ctx.canvas.width; //getting the width of the canvas
     //this.x = this.x + (this.x * dt);
+    if (this.x > resetBug) {
+        this.x = this.startPosX();
+        this.y = this.startPosY();
+    }
     this.x++;
 };
 
@@ -31,7 +36,7 @@ Enemy.prototype.render = function () {
 // This class requires an update(), render() and
 // a handleInput() method.
 
-var Player = function (x, y){
+var Player = function (x, y) {
     this.x = x;
     this.y = y;
     this.sprite = "char-boy.png";
@@ -41,23 +46,23 @@ Player.prototype.update = function () {
 
 }
 
-Player.prototype.handleInput = function(keyEvent) {
+Player.prototype.handleInput = function (keyEvent) {
     switch (keyEvent) {
-    case 37 :
-        this.x -= 1;
-        break;
+        case 37:
+            this.x -= 1;
+            break;
 
-    case 38 :
-        this.y += 1;
-        break;
+        case 38:
+            this.y += 1;
+            break;
 
-    case 39 :
-        this.x += 1;
-        break;
-    
-    case 40 :
-        this.y -= 1;
-        break;
+        case 39:
+            this.x += 1;
+            break;
+
+        case 40:
+            this.y -= 1;
+            break;
     }
 
 }
@@ -82,19 +87,36 @@ document.addEventListener('keyup', function (e) {
 
     //player.handleInput(allowedKeys[e.keyCode]);
 });
-
+var bugPosX = [-125];
 
 // function to generate the y position for the bug to start
-
-Enemy.prototype.startPos = function () {
-    var bugPos = [60, 143, 225];
-    var randomPos = bugPos[Math.floor(Math.random() * bugPos.length)];
-    return randomPos;
+Enemy.prototype.startPosX = function () {
+    var randomPosX = bugPosX[Math.floor(Math.random() * bugPosX.length)];
+    return randomPosX;
 };
 
-var enemyOne = new Enemy(5, -200);
+Enemy.prototype.startPosY = function () {
+    var bugPosY = [60, 143, 225];
+    var randomPosY = bugPosY[Math.floor(Math.random() * bugPosY.length)];
+    return randomPosY;
+};
+
+function numberOfEnemies(num) {
+    for (var i = 0; i < num; i++) {
+        allEnemies.push(new Enemy());
+        if (bugPosX[0] < -125) {
+            bugPosX[0] = -125;
+        } else {
+            bugPosX[0] -= 125;
+        }
+    }
+}
+
+numberOfEnemies(3);
+
+/*var enemyOne = new Enemy(5, -200);
 allEnemies.push(enemyOne);
 var enemyTwo = new Enemy(5, -260);
 allEnemies.push(enemyTwo);
 var enemyThree = new Enemy(5, -125);
-allEnemies.push(enemyThree);
+allEnemies.push(enemyThree);*/
