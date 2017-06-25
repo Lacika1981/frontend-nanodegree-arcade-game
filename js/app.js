@@ -8,8 +8,9 @@ var Enemy = function (speed) {
     this.sprite = 'images/enemy-bug.png';
     this.x = this.startPosX(); //the enemy will start off screen
     this.y = this.startPosY();
-    console.log(this.y);
     this.speed = speed;
+    this.width = 101;
+    this.height = 71;
 };
 
 // Update the enemy's position, required method for game
@@ -19,7 +20,6 @@ Enemy.prototype.update = function (dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     var resetBug = ctx.canvas.width; //getting the width of the canvas
-    //this.x = this.x + (this.x * dt);
     if (this.x > resetBug) {
         this.x = this.startPosX();
         this.y = this.startPosY();
@@ -30,6 +30,28 @@ Enemy.prototype.update = function (dt) {
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+var bugPosX = -125;
+
+// function to generate the y position for the bug to start
+Enemy.prototype.startPosX = function () {
+    console.log(this.x);
+    if (bugPosX < -1025) {
+            bugPosX = -125;
+        } else {
+            var diffX = [150, 300, 450, 600];
+            var randomPosX = diffX[Math.floor(Math.random() * diffX.length)];
+            bugPosX -= randomPosX;
+        }
+    var randomPosX = bugPosX;
+    return randomPosX;
+};
+
+Enemy.prototype.startPosY = function () {
+    var bugPosY = [60, 143, 225, 308, 391];
+    var randomPosY = bugPosY[Math.floor(Math.random() * bugPosY.length)];
+    return randomPosY;
 };
 
 // Now write your own player class
@@ -43,25 +65,23 @@ var Player = function () {
 }
 
 Player.prototype.update = function () {
+    this.handleInput();
+    this.x;
 }
 
 Player.prototype.handleInput = function (keyEvent) {
     switch (keyEvent) {
         case 37:
-            this.x -= 1;
-            break;
+            return this.x -= 100;
 
         case 38:
-            this.y += 1;
-            break;
+            return this.y += 100;
 
         case 39:
-            this.x += 1;
-            break;
+            return this.x += 100;
 
         case 40:
-            this.y -= 1;
-            break;
+            return this.y -= 100;
     }
 
 }
@@ -89,39 +109,19 @@ document.addEventListener('keyup', function (e) {
 
     //player.handleInput(allowedKeys[e.keyCode]);
 });
-var bugPosX = -125;
-
-// function to generate the y position for the bug to start
-Enemy.prototype.startPosX = function () {
-    if (bugPosX < -1025) {
-            bugPosX = -125;
-        } else {
-            var diffX = [0, 150, 300, 450, 600];
-            var randomPosX = diffX[Math.floor(Math.random() * diffX.length)];
-            bugPosX -= randomPosX;
-        }
-    var randomPosX = bugPosX;
-    return randomPosX;
-};
-
-Enemy.prototype.startPosY = function () {
-    var bugPosY = [60, 143, 225];
-    var randomPosY = bugPosY[Math.floor(Math.random() * bugPosY.length)];
-    return randomPosY;
-};
 
 function numberOfEnemies(num) {
     for (var i = 0; i < num; i++) {
         allEnemies.push(new Enemy(125));
-        if (bugPosX < -325) {
+        /*if (bugPosX < -325) {
             bugPosX = -125;
         } else {
             bugPosX -= 200;
-        }
+        }*/
     }
 }
 
-numberOfEnemies(5);
+numberOfEnemies(6);
 
 /*var enemyOne = new Enemy(5, -200);
 allEnemies.push(enemyOne);
