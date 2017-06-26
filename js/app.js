@@ -24,6 +24,8 @@ function getRandomInt(min, max) {
 // https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
 /*Enemy.prototype.setPosition = function () {
     var newEnemy = this;
+
+    console.log(newEnemy);
     var overlap = true;
 
     if (allEnemies.length > 0) {
@@ -53,7 +55,7 @@ function getRandomInt(min, max) {
 
 Enemy.prototype.setPosition = function () {
     var newEnemy = this;
-    newEnemy.x = getRandomInt(1, 700);
+    newEnemy.x = getRandomInt(-400, -125);
     newEnemy.y = getRandomInt(90, 380);
     var newArray = [];
     console.log(newArray);
@@ -71,8 +73,6 @@ Enemy.prototype.setPosition = function () {
                 rect1.y < rect2.y + rect2.height &&
                 rect1.height + rect1.y > rect2.y) {
                     console.log("collision");
-                /*newEnemy.x = getRandomInt(1, 700);
-                newEnemy.y = getRandomInt(90, 380);*/
                 this.setPosition();
             }
         }
@@ -87,10 +87,9 @@ Enemy.prototype.update = function (dt) {
     // all computers.
     var canvasWidth = ctx.canvas.width; //getting the width of the canvas
     if (this.x > canvasWidth) { // checking the width of the canvas and the position of each bugs
-        // this.x = this.startPosX();
-        // this.y = this.startPosY();
+        /*this.setPosition();*/
     }
-    //  this.x = this.x + (this.speed * dt);
+      this.x = this.x + (this.speed * dt);
 };
 
 // Draw the enemy on the screen, required method for game
@@ -98,8 +97,8 @@ Enemy.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-var bugPosX = -125; // initial position for the bugs
-var diffX = [50, 100, 150, 200, 250, 300]; // Array  to choose a value and place the bug at different X position
+/*var bugPosX = -125; // initial position for the bugs
+var diffX = [50, 100, 150, 200, 250, 300]; // Array  to choose a value and place the bug at different X position*/
 
 // Now write your own player class
 // This class requires an update(), render() and
