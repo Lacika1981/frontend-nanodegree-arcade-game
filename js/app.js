@@ -22,38 +22,36 @@ function getRandomInt(min, max) {
 }
 
 // https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
-Enemy.prototype.setPosition = function() {
-	var newEnemy = this;
-	var overlap = true;
-
-	if (allEnemies.length > 0) {
-		while (overlap) {
-			newEnemy.x = getRandomInt(1,600);
-			newEnemy.y = getRandomInt(1,400);
-            overap = false;
-			allEnemies.forEach(function(enemy) {
-				overlap = false;
-				var rect1 = {x: newEnemy.x, y: newEnemy.y, width: newEnemy.width, height: newEnemy.height};
-				var rect2 = {x: enemy.x, y: enemy.y, width: enemy.width, height: enemy.height};
-
-				if (rect1.x < rect2.x + rect2.width &&
-				   rect1.x + rect1.width > rect2.x &&
-				   rect1.y < rect2.y + rect2.height &&
-				   rect1.height + rect1.y > rect2.y) {
-				    overlap = true;
-                    console.log(overlap);
-				}
-			});
-		}
-	} else {
-		this.x = getRandomInt(1,600);
-		this.y = getRandomInt(1,400);
-	}
-
-};
-
-
 /*Enemy.prototype.setPosition = function () {
+    var newEnemy = this;
+    var overlap = true;
+
+    if (allEnemies.length > 0) {
+        while (overlap) {
+            newEnemy.x = getRandomInt(1, 700);
+            newEnemy.y = getRandomInt(90, 380);
+            overlap = false;
+            allEnemies.forEach(function (enemy) {
+                var rect1 = { x: newEnemy.x, y: newEnemy.y, width: newEnemy.width, height: newEnemy.height };
+                var rect2 = { x: enemy.x, y: enemy.y, width: enemy.width, height: enemy.height };
+                if (rect1.x < rect2.x + rect2.width &&
+                    rect1.x + rect1.width > rect2.x &&
+                    rect1.y < rect2.y + rect2.height &&
+                    rect1.height + rect1.y > rect2.y) {
+                    overlap = true;
+                    console.log(overlap);
+                }
+            });
+        }
+    } else {
+        this.x = getRandomInt(1, 700);
+        this.y = getRandomInt(90, 380);
+    }
+
+};*/
+
+
+Enemy.prototype.setPosition = function () {
     var newEnemy = this;
     newEnemy.x = getRandomInt(1, 700);
     newEnemy.y = getRandomInt(90, 380);
@@ -73,12 +71,13 @@ Enemy.prototype.setPosition = function() {
                 rect1.y < rect2.y + rect2.height &&
                 rect1.height + rect1.y > rect2.y) {
                     console.log("collision");
-                newEnemy.x = getRandomInt(1, 700);
-                newEnemy.y = getRandomInt(90, 380);
+                /*newEnemy.x = getRandomInt(1, 700);
+                newEnemy.y = getRandomInt(90, 380);*/
+                this.setPosition();
             }
         }
     }
-};*/
+};
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
