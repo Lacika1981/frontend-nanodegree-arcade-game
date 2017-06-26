@@ -48,49 +48,6 @@ Enemy.prototype.setPosition = function () {
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //var overlap = true;
-
-	/*if (allEnemies.length > 0) {
-		while (overlap) {
-			newEnemy.x = getRandomInt(1,600);
-			newEnemy.y = getRandomInt(90,380);
-			allEnemies.forEach(function(enemy) {
-				overlap = false;
-				var rect1 = {x: newEnemy.x, y: newEnemy.y, width: newEnemy.width, height: newEnemy.height};
-				var rect2 = {x: enemy.x, y: enemy.y, width: enemy.width, height: enemy.height};
-
-				if (rect1.x < rect2.x + rect2.width &&
-				   rect1.x + rect1.width > rect2.x &&
-				   rect1.y < rect2.y + rect2.height &&
-				   rect1.height + rect1.y > rect2.y) {
-				    overlap = true;
-				}
-			});
-		}
-	} else {
-		this.x = getRandomInt(1,600);
-		this.y = getRandomInt(90,380);
-	}*/
-
 };
 
 // Update the enemy's position, required method for game
