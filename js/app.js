@@ -52,31 +52,76 @@ function getRandomInt(min, max) {
 
 };*/
 
-
-Enemy.prototype.setPosition = function () {
-    var newEnemy = this;
-    newEnemy.x = getRandomInt(-400, -125);
-    newEnemy.y = getRandomInt(90, 380);
-    var newArray = [];
-    console.log(newArray);
-
-    allEnemies.forEach(function (enemy) {
-        newArray.push(enemy);
-    })
-
-    for (let i = 0; i < allEnemies.length; i++) {
-        for (let j = 0; j < newArray.length; j++) {
-            var rect1 = { x: newEnemy.x, y: newEnemy.y, width: newEnemy.width, height: newEnemy.height };
-            var rect2 = { x: newArray[j].x, y: newArray[j].y, width: newArray[j].width, height: newArray[j].height };
+/*Enemy.prototype.collision = function (enemy, array, all) {
+    for (let i = 0; i < all.length; i++) {
+        for (let j = 0; j < array.length; j++) {
+            var rect1 = { x: enemy.x, y: enemy.y, width: enemy.width, height: enemy.height };
+            var rect2 = { x: array[j].x, y: array[j].y, width: array[j].width, height: array[j].height };
             if (rect1.x < rect2.x + rect2.width &&
                 rect1.x + rect1.width > rect2.x &&
                 rect1.y < rect2.y + rect2.height &&
                 rect1.height + rect1.y > rect2.y) {
-                    console.log("collision");
+                console.log("collision");
                 this.setPosition();
             }
         }
     }
+}
+
+
+Enemy.prototype.setPosition = function () {
+    var newEnemy = this;
+    newEnemy.x = getRandomInt(-1000, -250);
+    newEnemy.y = getRandomInt(90, 380);
+    var newArray = [];
+    console.log(newArray);
+    allEnemies.forEach(function (enemy) {
+        newArray.push(enemy);
+    })
+
+    this.collision(newEnemy, newArray, allEnemies);
+};*/
+
+function collision(obj, array, all) {
+    this.obj = obj;
+    for (let i = 0; i < all.length; i++) {
+        for (let j = 0; j < array.length; j++) {
+            var rect1 = {
+                x: obj.x,
+                y: obj.y,
+                width: obj.width,
+                height: obj.height
+            };
+            var rect2 = {
+                x: array[j].x,
+                y: array[j].y,
+                width: array[j].width,
+                height: array[j].height
+            };
+            if (rect1.x < rect2.x + rect2.width &&
+                rect1.x + rect1.width > rect2.x &&
+                rect1.y < rect2.y + rect2.height &&
+                rect1.height + rect1.y > rect2.y) {
+                console.log("collision");
+                this.setPosition();
+            }
+        }
+    }
+}
+
+
+Enemy.prototype.setPosition = function() {
+    var newEnemy = this;
+    newEnemy.x = getRandomInt(-1000, -250);
+    newEnemy.y = getRandomInt(90, 380);
+    var newArray = [];
+    console.log(newArray);
+
+    allEnemies.forEach(function(enemy) {
+        newArray.push(enemy);
+    });
+
+    collision.call(this, newEnemy, newArray, allEnemies);
 };
 
 // Update the enemy's position, required method for game
@@ -88,8 +133,9 @@ Enemy.prototype.update = function (dt) {
     var canvasWidth = ctx.canvas.width; //getting the width of the canvas
     if (this.x > canvasWidth) { // checking the width of the canvas and the position of each bugs
         /*this.setPosition();*/
+        this.x = -125;
     }
-      this.x = this.x + (this.speed * dt);
+    this.x = this.x + (this.speed * dt);
 };
 
 // Draw the enemy on the screen, required method for game
@@ -114,8 +160,7 @@ var Player = function () {
 Player.prototype.update = function () {
     var playerX = [-10, 810];
     var playerY = [-10, 600];
-    playerX.push(this.x);
-    playerY.push(this.y);
+
     if (this.y < playerY[0]) {
         this.y = playerY[0];
     }
@@ -134,29 +179,29 @@ Player.prototype.update = function () {
 Player.prototype.handleInput = function () {
     var self = this;
     console.log(self);
-    document.addEventListener('keydown', function (event) {
+    document.addEventListener('keyup', function (event) {
         var keyName = event.which || event.keyCode;
 
         switch (keyName) {
             case 37:
             case 65:
             case 100:
-                return self.x -= 5;
+                return self.x -= 40;
 
             case 38:
             case 87:
             case 104:
-                return self.y -= 5;
+                return self.y -= 40;
 
             case 39:
             case 68:
             case 102:
-                return self.x += 5;
+                return self.x += 40;
 
             case 40:
             case 83:
             case 101:
-                return self.y += 5;
+                return self.y += 40;
         }
     })
 
@@ -196,4 +241,4 @@ function numberOfEnemies(num) {
     }
 }
 
-numberOfEnemies(10);
+numberOfEnemies(8);
