@@ -52,36 +52,6 @@ function getRandomInt(min, max) {
 
 };*/
 
-/*Enemy.prototype.collision = function (enemy, array, all) {
-    for (let i = 0; i < all.length; i++) {
-        for (let j = 0; j < array.length; j++) {
-            var rect1 = { x: enemy.x, y: enemy.y, width: enemy.width, height: enemy.height };
-            var rect2 = { x: array[j].x, y: array[j].y, width: array[j].width, height: array[j].height };
-            if (rect1.x < rect2.x + rect2.width &&
-                rect1.x + rect1.width > rect2.x &&
-                rect1.y < rect2.y + rect2.height &&
-                rect1.height + rect1.y > rect2.y) {
-                console.log("collision");
-                this.setPosition();
-            }
-        }
-    }
-}
-
-
-Enemy.prototype.setPosition = function () {
-    var newEnemy = this;
-    newEnemy.x = getRandomInt(-1000, -250);
-    newEnemy.y = getRandomInt(90, 380);
-    var newArray = [];
-    console.log(newArray);
-    allEnemies.forEach(function (enemy) {
-        newArray.push(enemy);
-    })
-
-    this.collision(newEnemy, newArray, allEnemies);
-};*/
-
 function collision(obj, array, all) {
     this.obj = obj;
     for (let i = 0; i < all.length; i++) {
