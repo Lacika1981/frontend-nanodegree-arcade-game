@@ -52,46 +52,47 @@ function getRandomInt(min, max) {
 
 };*/
 
+Enemy.prototype.collision = function (obj) {
+    var rect1 = this;
+    var rect2 = obj;
+    if (rect1.x < rect2.x + rect2.width &&
+        rect1.x + rect1.width > rect2.x &&
+        rect1.y < rect2.y + rect2.height &&
+        rect1.height + rect1.y > rect2.y) {
+        return true;
+    }
+    return false;
+}
+
 function collision(obj, array, all) {
-    this.obj = obj;
     for (let i = 0; i < all.length; i++) {
         for (let j = 0; j < array.length; j++) {
-            var rect1 = {
-                x: obj.x,
-                y: obj.y,
-                width: obj.width,
-                height: obj.height
-            };
-            var rect2 = {
-                x: array[j].x,
-                y: array[j].y,
-                width: array[j].width,
-                height: array[j].height
-            };
+            var rect1 = obj;
+            var rect2 = array[j];
             if (rect1.x < rect2.x + rect2.width &&
                 rect1.x + rect1.width > rect2.x &&
                 rect1.y < rect2.y + rect2.height &&
                 rect1.height + rect1.y > rect2.y) {
-                console.log("collision");
-                this.setPosition();
+                return true;
             }
         }
     }
 }
 
 
-Enemy.prototype.setPosition = function() {
+Enemy.prototype.setPosition = function () {
     var newEnemy = this;
     newEnemy.x = getRandomInt(-1000, -250);
     newEnemy.y = getRandomInt(90, 380);
-    var newArray = [];
-    console.log(newArray);
-
-    allEnemies.forEach(function(enemy) {
-        newArray.push(enemy);
+    var array = [];
+    allEnemies.forEach(function (enemy) {
+        array.push(enemy);
     });
-
-    collision.call(this, newEnemy, newArray, allEnemies);
+    var callCollision = collision.call(this, newEnemy, array, allEnemies);
+    callCollision;
+    if (callCollision) {
+        this.setPosition();
+    }
 };
 
 // Update the enemy's position, required method for game
@@ -100,6 +101,10 @@ Enemy.prototype.update = function (dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    this.collision(player);
+    if (this.collision(player)) {
+        console.log("reset");
+    }
     var canvasWidth = ctx.canvas.width; //getting the width of the canvas
     if (this.x > canvasWidth) { // checking the width of the canvas and the position of each bugs
         /*this.setPosition();*/
@@ -143,7 +148,6 @@ Player.prototype.update = function () {
     if (this.x > playerX[1]) {
         this.x = playerX[1];
     }
-
 }
 
 Player.prototype.handleInput = function () {
@@ -176,6 +180,14 @@ Player.prototype.handleInput = function () {
     })
 
 }
+
+/*Player.prototype.collide = function(){
+    newPlayer = this;
+    var array = [];
+    allEnemies.forEach(function (enemy) {
+        array.push(enemy);
+    });
+};*/
 
 Player.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
