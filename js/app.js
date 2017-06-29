@@ -52,9 +52,9 @@ function getRandomInt(min, max) {
 
 };*/
 
-Enemy.prototype.collision = function (obj) {
-    var rect1 = this;
-    var rect2 = obj;
+function objectCollision(obj1, obj2) {
+    var rect1 = obj1;
+    var rect2 = obj2;
     if (rect1.x < rect2.x + rect2.width &&
         rect1.x + rect1.width > rect2.x &&
         rect1.y < rect2.y + rect2.height &&
@@ -101,9 +101,9 @@ Enemy.prototype.update = function (dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    this.collision(player);
-    if (this.collision(player)) {
-        console.log("reset");
+    objectCollision(this, player);
+    if (objectCollision(this, player)) {
+        player.reset();
     }
     var canvasWidth = ctx.canvas.width; //getting the width of the canvas
     if (this.x > canvasWidth) { // checking the width of the canvas and the position of each bugs
@@ -128,11 +128,16 @@ var diffX = [50, 100, 150, 200, 250, 300]; // Array  to choose a value and place
 var Player = function () {
     this.x = (909 / 2) - 50; // X starting position for the character
     this.y = 600; // Y starting position for the character
+    this.initialX = this.x;
+    this.initialY = this.y;
+    this.width = 101;
+    this.height = 171;
     this.sprite = 'images/char-boy.png';
     this.handleInput(); // calling the function to handle the movement
 }
 
 Player.prototype.update = function () {
+
     var playerX = [-10, 810];
     var playerY = [-10, 600];
 
@@ -193,12 +198,39 @@ Player.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+Player.prototype.reset = function(){
+    this.x = this.initialX;
+    this.y = this.initialY;
+}
+
+var Gems = function(){
+    this.x = 300;
+    this.y = 300;
+    this.width = 101;
+    this.height = 171;
+    this.sprite = 'images/Gem Orange.png';
+    this.score = 0;
+};
+
+Gems.prototype.update = function(){
+    objectCollision(this, player);
+    if (objectCollision(this, player)){
+        this.score += 1;
+    }
+}
+
+Gems.prototype.render = function () {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.fillText(this.score, 100, 100);
+};
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
 var allEnemies = [];
 var player = new Player();
+var gem = new Gems();
 
 //################################################################//
 //This method has been commented out and replaced by my own method//
@@ -223,4 +255,4 @@ function numberOfEnemies(num) {
     }
 }
 
-numberOfEnemies(8);
+numberOfEnemies(4);
