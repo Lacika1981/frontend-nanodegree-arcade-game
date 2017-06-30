@@ -52,6 +52,9 @@ function getRandomInt(min, max) {
 
 };*/
 
+//This function is responsible to check if any Player-Enemy or Player-Gem
+//interactions hava been done
+
 function objectCollision(obj1, obj2) {
     var rect1 = obj1;
     var rect2 = obj2;
@@ -63,6 +66,8 @@ function objectCollision(obj1, obj2) {
     }
     return false;
 }
+
+//This function is responsible to prevent the Bugs to be overlapped
 
 function collision(obj, array, all) {
     for (let i = 0; i < all.length; i++) {
@@ -79,6 +84,7 @@ function collision(obj, array, all) {
     }
 }
 
+//This method places the bugs at random positions on the Canvas
 
 Enemy.prototype.setPosition = function () {
     var newEnemy = this;
@@ -101,6 +107,9 @@ Enemy.prototype.update = function (dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+
+    //Here we call the function at every frame to check any collisions
+
     objectCollision(this, player);
     if (objectCollision(this, player)) {
         player.reset();
@@ -194,34 +203,73 @@ Player.prototype.handleInput = function () {
     });
 };*/
 
+//Draws the Player on the Canvas
+
 Player.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    return {
+        endText: function(){
+            ctx.fillText("Game Over", 200, 200)
+        }
+    }
 };
 
 Player.prototype.reset = function(){
     this.x = this.initialX;
     this.y = this.initialY;
+    //this.render.endText();
 }
 
 var Gems = function(){
-    this.x = 300;
-    this.y = 300;
+    this.x = getRandomInt(50, 700);
+    this.y = getRandomInt(50, 400);
     this.width = 101;
     this.height = 171;
     this.sprite = 'images/Gem Orange.png';
     this.score = 0;
-};
+}
 
+
+//Checking if the Player gets a Gem and change the score and move the Gem out of Canvas
 Gems.prototype.update = function(){
     objectCollision(this, player);
     if (objectCollision(this, player)){
         this.score += 1;
+        this.x = -1000;
     }
 }
 
 Gems.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    ctx.fillText(this.score, 100, 100);
+    ctx.font = '30px Arial';
+    ctx.fillStyle = 'yellow';
+    ctx.textAlign = 'right'; 
+    ctx.fillText('Score: ' + this.score, 200, 100);
+};
+
+var Keys = function(){
+    this.x = getRandomInt(50, 700);
+    this.y = getRandomInt(50, 400);
+    this.width = 101;
+    this.height = 171;
+    this.sprite = 'images/Key.png';
+    this.keys = 0;
+}
+
+Keys.prototype.update = function(){
+    objectCollision(this, player);
+    if (objectCollision(this, player)){
+        this.keys += 1;
+        this.x = -1000;
+    }
+};
+
+Keys.prototype.render = function () {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.font = '30px Arial';
+    ctx.fillStyle = 'yellow';
+    ctx.textAlign = 'center';
+    ctx.fillText('Key: ' + this.keys, ctx.canvas.width / 2, 100);
 };
 
 // Now instantiate your objects.
@@ -231,6 +279,7 @@ Gems.prototype.render = function () {
 var allEnemies = [];
 var player = new Player();
 var gem = new Gems();
+var key = new Keys();
 
 //################################################################//
 //This method has been commented out and replaced by my own method//
