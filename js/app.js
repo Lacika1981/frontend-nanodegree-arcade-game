@@ -157,6 +157,8 @@ Player.prototype.update = function () {
 
 Player.prototype.handleInput = function () {
     var self = this;
+
+    var moving = 20;
     console.log(self);
     document.addEventListener('keyup', function (event) {
         var keyName = event.which || event.keyCode;
@@ -169,22 +171,22 @@ Player.prototype.handleInput = function () {
             case 37:
             case 65:
             case 100:
-                return self.x -= 20;
+                return self.x -= moving;
 
             case 38:
             case 87:
             case 104:
-                return self.y -= 20;
+                return self.y -= moving;
 
             case 39:
             case 68:
             case 102:
-                return self.x += 20;
+                return self.x += moving;
 
             case 40:
             case 83:
             case 101:
-                return self.y += 20;
+                return self.y += moving;
         }
     })
 
@@ -284,7 +286,7 @@ Keys.prototype.render = function () {
     ctx.fillText('Key: ' + this.keys, ctx.canvas.width / 2, 100);
 };
 
-/*var Rock = function(){
+var Rock = function(){
     this.x = getRandomInt(50, 700);
     this.y = getRandomInt(50, 400);
     this.width = 101;
@@ -293,14 +295,17 @@ Keys.prototype.render = function () {
 }
 
 Rock.prototype.update = function(){
-    objectCollision(this, player);
-    if (objectCollision(this, player)){
+    objectCollision(this, gem);
+    objectCollision(this, key);
+        if (objectCollision(this, gem) || objectCollision(this, key)){
+            this.x = getRandomInt(50, 700);
+    this.y = getRandomInt(50, 400); 
     }
 }
 
 Rock.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}*/
+}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -310,7 +315,7 @@ var allEnemies = [];
 var player = new Player();
 var gem = new Gems();
 var key = new Keys();
-//var rock = new Rock();
+var rock = new Rock();
 
 //################################################################//
 //This method has been commented out and replaced by my own method//
