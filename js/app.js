@@ -12,6 +12,7 @@ var Enemy = function (speed) {
     //    this.x = this.startPosX(); // the enemy will start off screen
     //   this.y = this.startPosY(); // calling the function to place the enemies onto different paths
     this.setPosition();
+    this.gameOver = false;
 };
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
@@ -112,7 +113,7 @@ Enemy.prototype.update = function (dt) {
 
     objectCollision(this, player);
     if (objectCollision(this, player)) {
-        player.reset();
+        this.gameOver = true;
     }
     var canvasWidth = ctx.canvas.width; //getting the width of the canvas
     if (this.x > canvasWidth) { // checking the width of the canvas and the position of each bugs
@@ -125,6 +126,10 @@ Enemy.prototype.update = function (dt) {
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    if(this.gameOver) {
+        ctx.font = '60px Arial';
+        ctx.fillText('Game Over', ctx.canvas.width / 2, ctx.canvas.height / 2);
+    }
 };
 
 /*var bugPosX = -125; // initial position for the bugs
@@ -146,7 +151,59 @@ var Player = function () {
 }
 
 Player.prototype.update = function () {
+    // canvas limitations - do not let the Player to leave the canvas
+    this.exclusions();
+}
 
+Player.prototype.handleInput = function () {
+    var self = this;
+    console.log(self);
+    document.addEventListener('keyup', function (event) {
+        var keyName = event.which || event.keyCode;
+
+        switch (keyName) {
+            case true:
+                return self.x = 0, self.y = 0;
+
+            
+            case 37:
+            case 65:
+            case 100:
+                return self.x -= 20;
+
+            case 38:
+            case 87:
+            case 104:
+                return self.y -= 20;
+
+            case 39:
+            case 68:
+            case 102:
+                return self.x += 20;
+
+            case 40:
+            case 83:
+            case 101:
+                return self.y += 20;
+        }
+    })
+
+}
+
+//Draws the Player on the Canvas
+
+Player.prototype.render = function () {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+/*Player.prototype.reset = function(){
+    this.x = this.initialX;
+    this.y = this.initialY;
+}*/
+
+// Areas where the Player can not go
+
+Player.prototype.exclusions = function () {
     var playerX = [-10, 810];
     var playerY = [-10, 600];
 
@@ -164,62 +221,6 @@ Player.prototype.update = function () {
     }
 }
 
-Player.prototype.handleInput = function () {
-    var self = this;
-    console.log(self);
-    document.addEventListener('keyup', function (event) {
-        var keyName = event.which || event.keyCode;
-
-        switch (keyName) {
-            case 37:
-            case 65:
-            case 100:
-                return self.x -= 40;
-
-            case 38:
-            case 87:
-            case 104:
-                return self.y -= 40;
-
-            case 39:
-            case 68:
-            case 102:
-                return self.x += 40;
-
-            case 40:
-            case 83:
-            case 101:
-                return self.y += 40;
-        }
-    })
-
-}
-
-/*Player.prototype.collide = function(){
-    newPlayer = this;
-    var array = [];
-    allEnemies.forEach(function (enemy) {
-        array.push(enemy);
-    });
-};*/
-
-//Draws the Player on the Canvas
-
-Player.prototype.render = function () {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    return {
-        endText: function(){
-            ctx.fillText("Game Over", 200, 200)
-        }
-    }
-};
-
-Player.prototype.reset = function(){
-    this.x = this.initialX;
-    this.y = this.initialY;
-    //this.render.endText();
-}
-
 var Gems = function(){
     this.x = getRandomInt(50, 700);
     this.y = getRandomInt(50, 400);
@@ -230,12 +231,23 @@ var Gems = function(){
 }
 
 
-//Checking if the Player gets a Gem and change the score and move the Gem out of Canvas
+//Checking if the Player gets a Gem and change the score.
+//If score less than 5 it will change the position of the Gem
 Gems.prototype.update = function(){
     objectCollision(this, player);
     if (objectCollision(this, player)){
         this.score += 1;
+        if (this.score < 5) {
+        this.x = getRandomInt(50, 700);
+        this.y = getRandomInt(50, 400);
+    } else {
         this.x = -1000;
+    }
+    };
+    objectCollision(this, key);
+    if (objectCollision(this, key)) {
+        this.x = getRandomInt(50, 700);
+        this.y = getRandomInt(50, 400);
     }
 }
 
@@ -272,6 +284,24 @@ Keys.prototype.render = function () {
     ctx.fillText('Key: ' + this.keys, ctx.canvas.width / 2, 100);
 };
 
+/*var Rock = function(){
+    this.x = getRandomInt(50, 700);
+    this.y = getRandomInt(50, 400);
+    this.width = 101;
+    this.height = 171;
+    this.sprite = 'images/Rock.png';
+}
+
+Rock.prototype.update = function(){
+    objectCollision(this, player);
+    if (objectCollision(this, player)){
+    }
+}
+
+Rock.prototype.render = function () {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+}*/
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
@@ -280,6 +310,7 @@ var allEnemies = [];
 var player = new Player();
 var gem = new Gems();
 var key = new Keys();
+//var rock = new Rock();
 
 //################################################################//
 //This method has been commented out and replaced by my own method//
