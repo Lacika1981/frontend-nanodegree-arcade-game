@@ -140,7 +140,7 @@ Player.prototype.handleInput = function (move) {
 
 Player.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    if ((this.y < 60) && (gem.score === 5) && (key.keys === 1)) { // if this staement true then draw "Win" to the Canvas
+    if ((gem.score === 5) && (key.keys === 1)) { // if this staement true then draw "Win" to the Canvas
         ctx.font = '900 60px Arial';
         ctx.fillStyle = 'yellow';
         ctx.fillText('Win', ctx.canvas.width / 2, ctx.canvas.height / 2);
