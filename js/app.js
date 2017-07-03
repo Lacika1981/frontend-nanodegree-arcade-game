@@ -5,14 +5,12 @@ var Enemy = function (speed) {
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
-    this.speed = speed;
     this.width = 101;
     this.height = 71;
-    //    this.x = this.startPosX(); // the enemy will start off screen
-    //   this.y = this.startPosY(); // calling the function to place the enemies onto different paths
-    this.setPosition();
+    this.sprite = 'images/enemy-bug.png';
+    this.speed = speed;
     this.gameOver = false;
+    this.setPosition();
 };
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
@@ -21,37 +19,6 @@ function getRandomInt(min, max) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
-
-// https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
-/*Enemy.prototype.setPosition = function () {
-    var newEnemy = this;
-
-    console.log(newEnemy);
-    var overlap = true;
-
-    if (allEnemies.length > 0) {
-        while (overlap) {
-            newEnemy.x = getRandomInt(1, 700);
-            newEnemy.y = getRandomInt(90, 380);
-            overlap = false;
-            allEnemies.forEach(function (enemy) {
-                var rect1 = { x: newEnemy.x, y: newEnemy.y, width: newEnemy.width, height: newEnemy.height };
-                var rect2 = { x: enemy.x, y: enemy.y, width: enemy.width, height: enemy.height };
-                if (rect1.x < rect2.x + rect2.width &&
-                    rect1.x + rect1.width > rect2.x &&
-                    rect1.y < rect2.y + rect2.height &&
-                    rect1.height + rect1.y > rect2.y) {
-                    overlap = true;
-                    console.log(overlap);
-                }
-            });
-        }
-    } else {
-        this.x = getRandomInt(1, 700);
-        this.y = getRandomInt(90, 380);
-    }
-
-};*/
 
 //This function is responsible to check if any Player-Enemy or Player-Gem
 //interactions hava been done
@@ -71,8 +38,8 @@ function objectCollision(obj1, obj2) {
 //This function is responsible to prevent the Bugs to be overlapped
 
 function collision(obj, array, all) {
-    for (let i = 0; i < all.length; i++) {
-        for (let j = 0; j < array.length; j++) {
+    for (var i = 0; i < all.length; i++) {
+        for (var j = 0; j < array.length; j++) {
             var rect1 = obj;
             var rect2 = array[j];
             if (rect1.x < rect2.x + rect2.width &&
@@ -89,12 +56,14 @@ function collision(obj, array, all) {
 
 Enemy.prototype.setPosition = function () {
     var newEnemy = this;
+    var array = [];
     newEnemy.x = getRandomInt(-1000, -250);
     newEnemy.y = getRandomInt(90, 380);
-    var array = [];
+
     allEnemies.forEach(function (enemy) {
         array.push(enemy);
     });
+
     var callCollision = collision.call(this, newEnemy, array, allEnemies);
     callCollision;
     if (callCollision) {
@@ -126,18 +95,12 @@ Enemy.prototype.update = function (dt) {
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    if(this.gameOver) {
-        ctx.font = '60px Arial';
+    if (this.gameOver) {
+        ctx.font = '900 60px Arial';
         ctx.fillText('Game Over', ctx.canvas.width / 2, ctx.canvas.height / 2);
+        ctx.strokeText('Game Over', ctx.canvas.width / 2, ctx.canvas.height / 2);
     }
 };
-
-/*var bugPosX = -125; // initial position for the bugs
-var diffX = [50, 100, 150, 200, 250, 300]; // Array  to choose a value and place the bug at different X position*/
-
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
 
 var Player = function () {
     this.x = (909 / 2) - 50; // X starting position for the character
@@ -155,19 +118,15 @@ Player.prototype.update = function () {
     this.exclusions();
 }
 
-Player.prototype.handleInput = function () {
+Player.prototype.handleInput = function (move) {
     var self = this;
 
-    var moving = 20;
+    var moving = 20 || move;
     console.log(self);
     document.addEventListener('keyup', function (event) {
         var keyName = event.which || event.keyCode;
 
         switch (keyName) {
-            case true:
-                return self.x = 0, self.y = 0;
-
-            
             case 37:
             case 65:
             case 100:
@@ -196,12 +155,13 @@ Player.prototype.handleInput = function () {
 
 Player.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    if ((this.y < 0) && (gem.score === 5) && (key.keys === 1)) {
+        ctx.font = '900 60px Arial';
+        ctx.fillStyle = 'yellow';
+        ctx.fillText('Win', ctx.canvas.width / 2, ctx.canvas.height / 2);
+        ctx.strokeText('Win', ctx.canvas.width / 2, ctx.canvas.height / 2);
+    }
 };
-
-/*Player.prototype.reset = function(){
-    this.x = this.initialX;
-    this.y = this.initialY;
-}*/
 
 // Areas where the Player can not go
 
@@ -223,7 +183,7 @@ Player.prototype.exclusions = function () {
     }
 }
 
-var Gems = function(){
+var Gems = function () {
     this.x = getRandomInt(50, 700);
     this.y = getRandomInt(50, 400);
     this.width = 101;
@@ -235,33 +195,28 @@ var Gems = function(){
 
 //Checking if the Player gets a Gem and change the score.
 //If score less than 5 it will change the position of the Gem
-Gems.prototype.update = function(){
+Gems.prototype.update = function () {
     objectCollision(this, player);
-    if (objectCollision(this, player)){
+    if (objectCollision(this, player)) {
         this.score += 1;
         if (this.score < 5) {
-        this.x = getRandomInt(50, 700);
-        this.y = getRandomInt(50, 400);
-    } else {
-        this.x = -1000;
-    }
+            this.x = getRandomInt(50, 700);
+            this.y = getRandomInt(50, 400);
+        } else {
+            this.x = -1000;
+        }
     };
-    objectCollision(this, key);
-    if (objectCollision(this, key)) {
-        this.x = getRandomInt(50, 700);
-        this.y = getRandomInt(50, 400);
-    }
 }
 
 Gems.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     ctx.font = '30px Arial';
     ctx.fillStyle = 'yellow';
-    ctx.textAlign = 'right'; 
+    ctx.textAlign = 'right';
     ctx.fillText('Score: ' + this.score, 200, 100);
 };
 
-var Keys = function(){
+var Keys = function () {
     this.x = getRandomInt(50, 700);
     this.y = getRandomInt(50, 400);
     this.width = 101;
@@ -270,9 +225,9 @@ var Keys = function(){
     this.keys = 0;
 }
 
-Keys.prototype.update = function(){
+Keys.prototype.update = function () {
     objectCollision(this, player);
-    if (objectCollision(this, player)){
+    if (objectCollision(this, player)) {
         this.keys += 1;
         this.x = -1000;
     }
@@ -284,28 +239,9 @@ Keys.prototype.render = function () {
     ctx.fillStyle = 'yellow';
     ctx.textAlign = 'center';
     ctx.fillText('Key: ' + this.keys, ctx.canvas.width / 2, 100);
+
+
 };
-
-var Rock = function(){
-    this.x = getRandomInt(50, 700);
-    this.y = getRandomInt(50, 400);
-    this.width = 101;
-    this.height = 171;
-    this.sprite = 'images/Rock.png';
-}
-
-Rock.prototype.update = function(){
-    objectCollision(this, gem);
-    objectCollision(this, key);
-        if (objectCollision(this, gem) || objectCollision(this, key)){
-            this.x = getRandomInt(50, 700);
-    this.y = getRandomInt(50, 400); 
-    }
-}
-
-Rock.prototype.render = function () {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -315,24 +251,6 @@ var allEnemies = [];
 var player = new Player();
 var gem = new Gems();
 var key = new Keys();
-var rock = new Rock();
-
-//################################################################//
-//This method has been commented out and replaced by my own method//
-//################################################################++//
-
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-/*document.addEventListener('keyup', function (e) {
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
-    };
-
-    //player.handleInput(allowedKeys[e.keyCode]);
-});*/
 
 function numberOfEnemies(num) {
     for (var i = 0; i < num; i++) {
