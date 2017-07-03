@@ -6,10 +6,10 @@ var Enemy = function (speed) {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.width = 101;
-    this.height = 71;
+    this.height = 80;
     this.sprite = 'images/enemy-bug.png';
     this.speed = speed;
-    this.gameOver = false;
+    //this.gameOver = false;
     this.setPosition();
 };
 
@@ -58,7 +58,7 @@ Enemy.prototype.setPosition = function () {
     var newEnemy = this;
     var array = [];
     newEnemy.x = getRandomInt(-1000, -250);
-    newEnemy.y = getRandomInt(90, 380);
+    newEnemy.y = getRandomInt(150, 480);
 
     allEnemies.forEach(function (enemy) {
         array.push(enemy);
@@ -82,7 +82,9 @@ Enemy.prototype.update = function (dt) {
 
     objectCollision(this, player);
     if (objectCollision(this, player)) {
-        this.gameOver = true;
+        //this.gameOver = true;
+            player.x = player.initialX;
+            player.y = player.initialY;
     }
     var canvasWidth = ctx.canvas.width; //getting the width of the canvas
     if (this.x > canvasWidth) { // checking the width of the canvas and the position of each bugs
@@ -95,20 +97,15 @@ Enemy.prototype.update = function (dt) {
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    if (this.gameOver) {
-        ctx.font = '900 60px Arial';
-        ctx.fillText('Game Over', ctx.canvas.width / 2, ctx.canvas.height / 2);
-        ctx.strokeText('Game Over', ctx.canvas.width / 2, ctx.canvas.height / 2);
-    }
 };
 
 var Player = function () {
     this.x = (909 / 2) - 50; // X starting position for the character
-    this.y = 600; // Y starting position for the character
+    this.y = 620; // Y starting position for the character
     this.initialX = this.x;
     this.initialY = this.y;
-    this.width = 101;
-    this.height = 171;
+    this.width = 80;
+    this.height = 85;
     this.sprite = 'images/char-boy.png';
     this.handleInput(); // calling the function to handle the movement
 }
@@ -116,6 +113,7 @@ var Player = function () {
 Player.prototype.update = function () {
     // canvas limitations - do not let the Player to leave the canvas
     this.exclusions();
+    console.log(this.x, this.y);
 }
 
 Player.prototype.handleInput = function (move) {
@@ -155,7 +153,7 @@ Player.prototype.handleInput = function (move) {
 
 Player.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    if ((this.y < 0) && (gem.score === 5) && (key.keys === 1)) {
+    if ((this.y < 60) && (gem.score === 5) && (key.keys === 1)) {
         ctx.font = '900 60px Arial';
         ctx.fillStyle = 'yellow';
         ctx.fillText('Win', ctx.canvas.width / 2, ctx.canvas.height / 2);
@@ -166,8 +164,8 @@ Player.prototype.render = function () {
 // Areas where the Player can not go
 
 Player.prototype.exclusions = function () {
-    var playerX = [-10, 810];
-    var playerY = [-10, 600];
+    var playerX = [10, 820];
+    var playerY = [50, 620];
 
     if (this.y < playerY[0]) {
         this.y = playerY[0];
@@ -184,10 +182,10 @@ Player.prototype.exclusions = function () {
 }
 
 var Gems = function () {
-    this.x = getRandomInt(50, 700);
-    this.y = getRandomInt(50, 400);
-    this.width = 101;
-    this.height = 171;
+    this.x = getRandomInt(100, 700);
+    this.y = getRandomInt(150, 400);
+    this.width = 105;
+    this.height = 110;
     this.sprite = 'images/Gem Orange.png';
     this.score = 0;
 }
@@ -217,10 +215,10 @@ Gems.prototype.render = function () {
 };
 
 var Keys = function () {
-    this.x = getRandomInt(50, 700);
-    this.y = getRandomInt(50, 400);
-    this.width = 101;
-    this.height = 171;
+    this.x = getRandomInt(100, 700);
+    this.y = getRandomInt(150, 400);
+    this.width = 55;
+    this.height = 95;
     this.sprite = 'images/Key.png';
     this.keys = 0;
 }
@@ -254,8 +252,8 @@ var key = new Keys();
 
 function numberOfEnemies(num) {
     for (var i = 0; i < num; i++) {
-        allEnemies.push(new Enemy(125));
+        allEnemies.push(new Enemy(getRandomInt(75, 300)));
     }
 }
 
-numberOfEnemies(4);
+numberOfEnemies(6);
